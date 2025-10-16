@@ -1,9 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { supabase } from "./supabase-client";
 
+interface Task {
+  id: number;
+  title: string;
+  description: string;
+  created_at: string;
+}
+
 function App() {
   const [newTask, setNewTask] = useState({ title: "", description: "" });
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  const fetchTasks = async () => {
+    const { error, data } = await supabase
+      .from("tasks")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("Error reading task: ", error.message);
+      return;
+    }
+
+    setTasks(data);
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -12,11 +34,17 @@ function App() {
 
     if (error) {
       console.error("Error adding task: ", error.message);
+      return;
     }
 
     setNewTask({ title: "", description: "" });
   };
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  console.log(tasks);
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "1rem" }}>
       <h2>Task Manager CRUD</h2>
