@@ -27,6 +27,17 @@ function App() {
     setTasks(data);
   };
 
+  const deleteTaks = async (id: number) => {
+    const { error } = await supabase.from("tasks").delete().eq("id", id);
+
+    if (error) {
+      console.error("Error deleting task: ", error.message);
+      return;
+    }
+
+    setNewTask({ title: "", description: "" });
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -78,30 +89,35 @@ function App() {
 
       {/* List of Tasks */}
       <ul style={{ listStyle: "none", padding: 0 }}>
-        <li
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            padding: "1rem",
-            marginBottom: "0.5rem",
-          }}
-        >
-          <div>
-            <h3>Title</h3>
-            <p>Description</p>
-            {/* <img src={task.image_url} style={{ height: 70 }} /> */}
+        {tasks.map((task, key) => (
+          <li
+            key={key}
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              padding: "1rem",
+              marginBottom: "0.5rem",
+            }}
+          >
             <div>
-              {/* <textarea
+              <h3> {task.title} </h3>
+              <p> {task.description} </p>
+              {/* <img src={task.image_url} style={{ height: 70 }} /> */}
+              <div>
+                {/* <textarea
                   placeholder="Updated description..."
                   onChange={(e) => setNewDescription(e.target.value)}
-                /> */}
-              <button style={{ padding: "0.5rem 1rem", marginRight: "0.5rem" }}>
-                Edit
-              </button>
-              <button style={{ padding: "0.5rem 1rem" }}>Delete</button>
+                  /> */}
+                <button
+                  style={{ padding: "0.5rem 1rem", marginRight: "0.5rem" }}
+                >
+                  Edit
+                </button>
+                <button style={{ padding: "0.5rem 1rem" }}>Delete</button>
+              </div>
             </div>
-          </div>
-        </li>
+          </li>
+        ))}
       </ul>
     </div>
   );
