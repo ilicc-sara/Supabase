@@ -12,6 +12,7 @@ interface Task {
 function App() {
   const [newTask, setNewTask] = useState({ title: "", description: "" });
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [newDescription, setNewDescription] = useState("");
 
   const fetchTasks = async () => {
     const { error, data } = await supabase
@@ -34,8 +35,18 @@ function App() {
       console.error("Error deleting task: ", error.message);
       return;
     }
+  };
 
-    setNewTask({ title: "", description: "" });
+  const updateTaks = async (id: number) => {
+    const { error } = await supabase
+      .from("tasks")
+      .update({ description: newDescription })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating task: ", error.message);
+      return;
+    }
   };
 
   const handleSubmit = async (e: any) => {
@@ -104,16 +115,23 @@ function App() {
               <p> {task.description} </p>
               {/* <img src={task.image_url} style={{ height: 70 }} /> */}
               <div>
-                {/* <textarea
+                <textarea
                   placeholder="Updated description..."
+                  value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
-                  /> */}
+                />
                 <button
                   style={{ padding: "0.5rem 1rem", marginRight: "0.5rem" }}
+                  onClick={() => updateTaks(task.id)}
                 >
                   Edit
                 </button>
-                <button style={{ padding: "0.5rem 1rem" }}>Delete</button>
+                <button
+                  style={{ padding: "0.5rem 1rem" }}
+                  onClick={() => deleteTaks(task.id)}
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </li>
