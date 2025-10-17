@@ -33,7 +33,7 @@ function Auth() {
 
   return (
     <div style={{ maxWidth: "400px", margin: "0 auto", padding: "1 rem" }}>
-      <h2> {isSignUp ? "Sign Up" : "Sign In"} </h2>
+      <h2> {isSignUp ? "Sign Up" : "Log In"} </h2>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -57,16 +57,22 @@ function Auth() {
           type="submit"
           style={{ padding: "0.5rem 1rem", marginBottom: "0.5rem" }}
         >
-          {isSignUp ? "Sign Up" : "Sign In"}
+          {isSignUp ? "Sign Up" : "Log In"}
         </button>
       </form>
+      <p>
+        {" "}
+        {isSignUp
+          ? "Already have an accont? Log In"
+          : "You don't have an account? Sign Up"}
+      </p>
       <button
         onClick={() => {
           setIsSignUp(!isSignUp);
         }}
         style={{ padding: "0.5rem 1rem" }}
       >
-        {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
+        {isSignUp ? "Switch to Log In" : "Switch to Sign Up"}
       </button>
     </div>
   );
