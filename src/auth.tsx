@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FormEvent, ChangeEvent } from "react";
+import { supabase } from "./supabase-client";
 
 function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -8,6 +9,26 @@ function Auth() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (isSignUp) {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (signUpError) {
+        console.log("Error signing up: ", signUpError.message);
+        return;
+      }
+    } else {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (signInError) {
+        console.log("Error signing in: ", signInError.message);
+        return;
+      }
+    }
   };
 
   return (
@@ -18,7 +39,7 @@ function Auth() {
           type="email"
           placeholder="Email"
           value={email}
-          onChange={(e: ChangeEvent<HTMLFormElement>) =>
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setEmail(e.target.value)
           }
           style={{ width: "100%", marginBottom: "0.5rem", padding: "0.5rem" }}
@@ -27,7 +48,7 @@ function Auth() {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e: ChangeEvent<HTMLFormElement>) =>
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setPassword(e.target.value)
           }
           style={{ width: "100%", marginBottom: "0.5rem", padding: "0.5rem" }}
@@ -50,3 +71,5 @@ function Auth() {
     </div>
   );
 }
+
+export default Auth;
