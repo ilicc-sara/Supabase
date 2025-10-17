@@ -65,7 +65,7 @@ function TaskManager() {
     fetchTasks();
   }, []);
 
-  console.log(tasks);
+  // console.log(tasks);
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "1rem" }}>
       <h2>Task Manager CRUD</h2>
